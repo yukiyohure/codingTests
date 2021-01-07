@@ -11,7 +11,14 @@
  *
  */
 
+const { objectExpression } = require("@babel/types");
+
 function length(str) {
+  let charCount = 0;
+  while (str[charCount]) {
+    charCount++;
+  }
+  return charCount;
 }
 
 /**
@@ -26,6 +33,11 @@ function length(str) {
  *
  */
 function reverse(str) {
+  let reverse = '';
+  for (i=str.length; i > 0; i--) {
+    reverse = reverse + str[i - 1];
+  }
+  return reverse;
 }
 
 /**
@@ -41,6 +53,12 @@ function reverse(str) {
  */
 
 function findIndex(str, char) {
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === char) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 /**
@@ -56,6 +74,17 @@ function findIndex(str, char) {
  */
 
 function split(a, b) {
+  let str = a;
+  const result = [];
+  for (let i = 0; i < a.length; i++) {
+    if (b === str[i]) {
+      result.push(str.slice(0, i)); // スタート地点の文字から「1文字目」のカウント
+      str = str.slice(i + 1, str.length); // 分割した分は切り落とす
+      i = 0; // iをリセットしないと。
+    }
+  }
+  result.push(str); // 分割できて最後の余ったやつをpush or 分割できなかったからstrを丸ごと配列へin!
+  return result;
 }
 
 /**
@@ -71,6 +100,9 @@ function split(a, b) {
  */
 
 function sum(array) {
+  return array.reduce((accum, current) => {
+    return accum + current;
+  }, 0);
 }
 
 /**
@@ -88,6 +120,15 @@ function sum(array) {
  */
 
 function average(array) {
+  const length = array.length;
+  if (length === 0) {
+    return 0;
+  }
+  let sum = 0;
+  for (let i = 0; i < length; i++) {
+    sum = sum + array[i];
+  }
+  return Math.trunc(sum/length);
 }
 
 /**
@@ -103,6 +144,10 @@ function average(array) {
  */
 
 function concat(a, b) {
+  for (let i = 0; i < b.length; i++) {
+    a.push(b[i]);
+  }
+  return a;
 }
 
 /**
@@ -118,6 +163,11 @@ function concat(a, b) {
  */
 
 function size(array) {
+  let count = 0;
+  while (array[count]) {
+    count ++;
+  }
+  return count;
 }
 
 /**
@@ -134,6 +184,20 @@ function size(array) {
  */
 
 function minMax(array) {
+  if (array.length === 0) {
+    return;
+  }
+  let max = null;
+  let min = null; // ここでminを0とかで決めちゃうと最小値が0のままになってしまう場合が多々ある。
+  for (let i = 0; i < array.length; i++) {
+    if (max === null || max < array[i]) { // なので、nullの時かどうかも条件に入れてあげる
+      max = array[i];
+    }
+    if (min ===null || min > array[i]) { // ここも一緒
+      min = array[i];
+    }
+  }
+  console.log(`max: ${max}, min: ${min}`);
 }
 
 /**
@@ -148,6 +212,11 @@ function minMax(array) {
  */
 
 function seq(num) {
+  const array = [];
+  for (let i = 0; i < num; i++) {
+    array.push(i);
+  }
+  return array;
 }
 
 /**
@@ -163,6 +232,13 @@ function seq(num) {
  */
 
 function omitSeq(num) {
+  const array = [];
+  for (let i = 0; i <= num; i++) { // 指定された数字も含んであげましょう
+    if (i % 2 === 1) {
+      array.push(i);
+    }
+  }
+  return array;
 }
 
 /**
@@ -178,6 +254,13 @@ function omitSeq(num) {
  */
 
 function filter(array, num) {
+  let ResultArray = [];
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] <= num) {
+      ResultArray.push(array[i]);
+    }
+  }
+  return ResultArray;
 }
 
 
@@ -206,6 +289,9 @@ function filter(array, num) {
  */
 
 function fizzBuzz () {
+  for (let i = 1; i <= 100; i++) {
+    console.log(`${i} ` + (i % 3 === 0 ? 'Fizz' : '') + (i % 5 === 0 ? 'Buzz' : '')); // ${i}の隣スペースを入れることをお忘れなく。
+  }
 }
 
 module.exports = {
