@@ -11,19 +11,14 @@
  *
  */
 
-function length(str) {
-  // let charCount = 0;
-  // const strArray = str.split(''); // 一文字ごとに配列にする
-  // while (strArray[charCount]) { // 配列の中身がある限りcharCountは増える
-  //   charCount++;
-  // }
-  // return charCount; // 増えた回数 = 文字長
+const { objectExpression } = require("@babel/types");
 
+function length(str) {
   let charCount = 0;
-  while (str[charCount]) { // es6からのブラケット記法により文字列をわざわざ配列に変換しなくて良い
+  while (str[charCount]) {
     charCount++;
   }
-  return charCount; // 増えた回数 = 文字長
+  return charCount;
 }
 
 /**
@@ -38,11 +33,11 @@ function length(str) {
  *
  */
 function reverse(str) {
-  let reversedString = '';
-  for (let i = str.length; i > 0; i--) {
-    reversedString += str[i - 1];
+  let reverse = '';
+  for (i=str.length; i > 0; i--) {
+    reverse = reverse + str[i - 1];
   }
-  return reversedString;
+  return reverse;
 }
 
 /**
@@ -79,7 +74,17 @@ function findIndex(str, char) {
  */
 
 function split(a, b) {
-  return a.split(b);
+  let str = a;
+  const result = [];
+  for (let i = 0; i < a.length; i++) {
+    if (b === str[i]) {
+      result.push(str.slice(0, i)); // スタート地点の文字から「1文字目」のカウント
+      str = str.slice(i + 1, str.length); // 分割した分は切り落とす
+      i = 0; // iをリセットしないと。
+    }
+  }
+  result.push(str); // 分割できて最後の余ったやつをpush or 分割できなかったからstrを丸ごと配列へin!
+  return result;
 }
 
 /**
@@ -95,11 +100,9 @@ function split(a, b) {
  */
 
 function sum(array) {
-  let sum = 0;
-  for (let i = 0; i < array.length; i++) {
-    sum += array[i];
-  }
-  return sum;
+  return array.reduce((accum, current) => {
+    return accum + current;
+  }, 0);
 }
 
 /**
@@ -117,16 +120,15 @@ function sum(array) {
  */
 
 function average(array) {
-  let total = 0;
-  let avarage = 0;
-  if (array.length === 0) { // 早期リターン
+  const length = array.length;
+  if (length === 0) {
     return 0;
   }
-
-  for (let i = 0; i < array.length; i++) {
-    total += array[i];
+  let sum = 0;
+  for (let i = 0; i < length; i++) {
+    sum = sum + array[i];
   }
-  return Math.floor(total / array.length);
+  return Math.trunc(sum/length);
 }
 
 /**
@@ -142,7 +144,10 @@ function average(array) {
  */
 
 function concat(a, b) {
-  return a.concat(b);
+  for (let i = 0; i < b.length; i++) {
+    a.push(b[i]);
+  }
+  return a;
 }
 
 /**
@@ -158,7 +163,11 @@ function concat(a, b) {
  */
 
 function size(array) {
-  return array.length;
+  let count = 0;
+  while (array[count]) {
+    count ++;
+  }
+  return count;
 }
 
 /**
@@ -175,24 +184,17 @@ function size(array) {
  */
 
 function minMax(array) {
-  // if (array.length === 0) {
-  //   return;
-  // }
-  // let max = array.reduce((last, current) => last > current ? last : current);
-  // let min = array.reduce((last, current) => last > current ? current : last);
-  // console.log(`max: ${max}, min: ${min}`);
-
   if (array.length === 0) {
     return;
   }
-  let max;
-  let min;
-  for (let i = 0; i < array.length; i++) { // 1回の繰り返しで済む(自分の回答だと繰り返しが2回)
-    if (!max || max < array[i]) {
-      max = array[i]
+  let max = null;
+  let min = null; // ここでminを0とかで決めちゃうと最小値が0のままになってしまう場合が多々ある。
+  for (let i = 0; i < array.length; i++) {
+    if (max === null || max < array[i]) { // なので、nullの時かどうかも条件に入れてあげる
+      max = array[i];
     }
-    if (!min || min > array[i]) {
-      min = array[i]
+    if (min ===null || min > array[i]) { // ここも一緒
+      min = array[i];
     }
   }
   console.log(`max: ${max}, min: ${min}`);
@@ -210,11 +212,11 @@ function minMax(array) {
  */
 
 function seq(num) {
-  let result = [];
+  const array = [];
   for (let i = 0; i < num; i++) {
-    result.push(i);
+    array.push(i);
   }
-  return result;
+  return array;
 }
 
 /**
@@ -230,19 +232,13 @@ function seq(num) {
  */
 
 function omitSeq(num) {
-  // let result = [];
-  // for (let i = 0; i <= num; i++) {
-  //   if (i != 0 && i % 2 === 1) {
-  //     result.push(i);
-  //   }
-  // }
-  // return result;
-
-  let result = [];
-  for (let i = 1; i <= num; i = i + 2) { // forのインデックスの増え方を調整して、ifの処理を行う必要がなくなる
-    result.push(i);
+  const array = [];
+  for (let i = 0; i <= num; i++) { // 指定された数字も含んであげましょう
+    if (i % 2 === 1) {
+      array.push(i);
+    }
   }
-  return result;
+  return array;
 }
 
 /**
@@ -258,7 +254,13 @@ function omitSeq(num) {
  */
 
 function filter(array, num) {
-  return array.filter((value) => value <= num ? true : false);
+  let ResultArray = [];
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] <= num) {
+      ResultArray.push(array[i]);
+    }
+  }
+  return ResultArray;
 }
 
 
@@ -287,18 +289,8 @@ function filter(array, num) {
  */
 
 function fizzBuzz () {
-  for (let i = 1; i <= 100 ; i++) {
-    // total time: 3.475s
-    // if (i % 3 === 0 && i % 5 === 0) {
-    //   console.log(`${i} FizzBuzz`);
-    // } else if (i % 3 === 0) {
-    //   console.log(`${i} Fizz`);
-    // } else if (i % 5 === 0) {
-    //   console.log(`${i} Buzz`);
-    // } else {
-    //   console.log(i);
-    // }
-    console.log(`${i} ` + (i % 3 === 0 ? `Fizz` : '') + (i % 5 === 0 ? `Buzz` : '')); // total time: 3.335s
+  for (let i = 1; i <= 100; i++) {
+    console.log(`${i} ` + (i % 3 === 0 ? 'Fizz' : '') + (i % 5 === 0 ? 'Buzz' : '')); // ${i}の隣スペースを入れることをお忘れなく。
   }
 }
 
