@@ -10,6 +10,8 @@
  *
  */
 function rotate(str, num) {
+  const number = num > 0 ? str.length - num : -num;
+  return str.slice(number, str.length) + str.slice(0, number);
 }
 
 /**
@@ -24,6 +26,13 @@ function rotate(str, num) {
  *
  */
 function removeVowels(str) {
+  let result = '';
+  for (let i = 0; i < str.length; i++) {
+    if (!'aeiou'.includes(str[i])) {
+      result += str[i];
+    }
+  }
+  return result;
 }
 
 /**
