@@ -10,6 +10,8 @@
  *
  */
 function rotate(str, num) {
+  const number = num > 0 ? str.length - num : -num;
+  return str.slice(number, str.length) + str.slice(0, number);
 }
 
 /**
@@ -24,6 +26,13 @@ function rotate(str, num) {
  *
  */
 function removeVowels(str) {
+  let result = '';
+  for (let i = 0; i < str.length; i++) {
+    if (!'aeiou'.includes(str[i])) {
+      result += str[i];
+    }
+  }
+  return result;
 }
 
 /**
@@ -38,6 +47,8 @@ function removeVowels(str) {
  *
  */
 function countStr(s1, s2) {
+  const rx = RegExp(s2, 'g');
+  return s1.match(rx).length;
 }
 
 /**
@@ -53,6 +64,11 @@ function countStr(s1, s2) {
  */
 
 function isPalindrome(str) {
+  let reversed = '';
+  for (let i = str.length; i > 0; i--) {
+    reversed += str[i - 1];
+  }
+  return str === reversed ? true : false;
 }
 
 /**
@@ -70,6 +86,17 @@ function isPalindrome(str) {
  *
  */
 function isPrime(num) {
+  const maxLoop = Math.floor(Math.sqrt(num));
+  if (num === 1) return false;
+  if (num === 2) return true;
+  if (num % 2 === 0) return false;
+
+  // 1から始めるのは素数を求める上で意味がないし、
+  // 2で割るケースはもう試しているので、ループのスタートは3から始めたほうが効率的
+  for (let i = 3; i < maxLoop; i++) {
+    if (num % i === 0) return false;
+  }
+  return true;
 }
 
 /**
@@ -88,6 +115,14 @@ function isPrime(num) {
  *
  */
 function sumWithout4andNext(array) {
+  let sum = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] === 4 || (i > 0 && array[i - 1] === 4)) {
+      continue;
+    }
+    sum += array[i];
+  }
+  return sum;
 }
 
 module.exports = {
